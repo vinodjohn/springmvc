@@ -4,17 +4,16 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 
 /**
- * Teacher model
+ * Student model
  *
  * @author VinodJohn
  */
 
 @Entity
 @Data
-public class Teacher {
+public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -23,6 +22,5 @@ public class Teacher {
     private boolean isActive;
     @OneToOne
     private School school;
-    @OneToMany
-    private List<SpecializedField> specialistFields;
+    private int grade;
 }

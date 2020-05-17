@@ -3,26 +3,25 @@ package com.sda.studysystem.models;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.List;
 
 /**
- * Teacher model
+ * School model
  *
  * @author VinodJohn
  */
-
 @Entity
 @Data
-public class Teacher {
+public class School {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private LocalDate joinDate;
-    private boolean isActive;
+    private String street;
     @OneToOne
-    private School school;
-    @OneToMany
-    private List<SpecializedField> specialistFields;
+    private City city;
+    @OneToOne
+    private County county;
+    @OneToOne
+    private Country country;
+    private String zipcode;
 }

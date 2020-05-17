@@ -49,10 +49,24 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public boolean deleteTeacherById(Long teacherId) {
-        if (teacherId == null || !teacherRepository.existsById(teacherId)) {
+        Teacher teacher = getById(teacherId);
+        if (teacherId == null) {
             return false;
         }
-        teacherRepository.deleteById(teacherId);
+
+        teacher.setActive(false);
+        updateTeacher(teacher);
         return true;
+    }
+
+    @Override
+    public boolean restoreTeacherById(Long teacherId) {
+        Teacher teacher = getById(teacherId);
+        if (teacherId == null) {
+            return false;
+        }
+
+        teacher.setActive(true);
+        return updateTeacher(teacher);
     }
 }

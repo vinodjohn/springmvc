@@ -38,6 +38,7 @@ public class TeacherController {
 
     @PostMapping("/add")
     public String addTeacher(Teacher teacher, Model model) {
+        teacher.setActive(true);
         boolean createResult = teacherService.createTeacher(teacher);
 
         if (createResult) {
@@ -83,6 +84,21 @@ public class TeacherController {
             model.addAttribute("messageType", "success");
         } else {
             model.addAttribute("message", "Error in deleting a teacher!");
+            model.addAttribute("messageType", "error");
+        }
+
+        return showAllTeachers(model);
+    }
+
+    @GetMapping("/restore/{id}")
+    public String restoreTeacher(@PathVariable("id") Long teacherId, Model model) {
+        boolean restoreResult = teacherService.restoreTeacherById(teacherId);
+
+        if (restoreResult) {
+            model.addAttribute("message", "Teacher has been successfully restored.");
+            model.addAttribute("messageType", "success");
+        } else {
+            model.addAttribute("message", "Error in restored a teacher!");
             model.addAttribute("messageType", "error");
         }
 

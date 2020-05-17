@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * Service to handle Teacher related operations
+ *
  * @author VinodJohn
  */
 
@@ -13,12 +14,14 @@ public interface TeacherService {
 
     /**
      * To create a new Teacher
+     *
      * @param teacher Teacher
      */
     boolean createTeacher(Teacher teacher);
 
     /**
      * To update an existing Teacher
+     *
      * @param teacher teacher
      * @return update result
      */
@@ -34,14 +37,24 @@ public interface TeacherService {
 
     /**
      * To get all the teachers
+     *
      * @return list of all teachers
      */
     List<Teacher> getAllTeachers();
 
     /**
-     * Delete teacher by Id
+     * Delete teacher(change active state) by Id
+     *
      * @param teacherId teacherId
-     * @return is it deleted.
+     * @return is it deleted
      */
     boolean deleteTeacherById(Long teacherId);
+
+    /**
+     * Restore teacher(change active state) by Id
+     *
+     * @param teacherId teacherId
+     * @return is it restored
+     */
+    boolean restoreTeacherById(Long teacherId);
 }
