@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
@@ -17,12 +18,13 @@ import java.util.List;
  * @author VinodJohn
  */
 
-@Controller("/teacher")
+@Controller
+@RequestMapping("/teacher")
 public class TeacherController {
     @Autowired
     private TeacherService teacherService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public String showAllTeachers(Model model) {
         List<Teacher> teachers = teacherService.getAllTeachers();
         model.addAttribute("teachers", teachers);
