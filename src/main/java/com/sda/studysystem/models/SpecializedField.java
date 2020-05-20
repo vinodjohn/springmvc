@@ -18,4 +18,5 @@ public class SpecializedField {
     private String name;
     @OneToOne
     private Category category;
+    private boolean isActive;
 }

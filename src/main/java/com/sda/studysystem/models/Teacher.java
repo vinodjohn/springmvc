@@ -24,5 +24,5 @@ public class Teacher {
     @OneToOne
     private School school;
     @OneToMany
-    private List<SpecializedField> specialistFields;
+    private List<SpecializedField> specializedFields;
 }
