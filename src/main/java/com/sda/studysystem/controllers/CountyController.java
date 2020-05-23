@@ -2,6 +2,7 @@ package com.sda.studysystem.controllers;
 
 import com.sda.studysystem.models.Country;
 import com.sda.studysystem.models.County;
+import com.sda.studysystem.services.CityService;
 import com.sda.studysystem.services.CountryService;
 import com.sda.studysystem.services.CountyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,12 @@ public class CountyController {
     @Autowired
     private CountryService countryService;
 
+    @Autowired
+    private CityService cityService;
+
     @GetMapping("")
     public String showAllCounties(@ModelAttribute("messageType") String messageType, @ModelAttribute("message") String message,
-                                   Model model) {
+                                  Model model) {
         List<County> counties = countyService.getAllCounties();
         model.addAttribute("counties", counties);
         return "county/county-list";
@@ -38,7 +42,7 @@ public class CountyController {
 
     @GetMapping("/add")
     public String addCountyForm(@ModelAttribute("county") County county, @ModelAttribute("messageType") String messageType,
-                                 @ModelAttribute("message") String message, Model model) {
+                                @ModelAttribute("message") String message, Model model) {
         List<Country> countries = countryService.getAllCountries().stream()
                 .filter(Country::isActive).collect(Collectors.toList());
         model.addAttribute("countries", countries);
@@ -63,8 +67,8 @@ public class CountyController {
 
     @GetMapping("/update/{id}")
     public String updateCountyForm(@PathVariable("id") Long countyId, @RequestParam(value = "county", required = false) County county,
-                                    @ModelAttribute("messageType") String messageType,
-                                    @ModelAttribute("message") String message, Model model) {
+                                   @ModelAttribute("messageType") String messageType,
+                                   @ModelAttribute("message") String message, Model model) {
         if (county == null) {
             model.addAttribute("county", countyService.getById(countyId));
         }
@@ -97,6 +101,10 @@ public class CountyController {
     public String deleteCounty(@PathVariable("id") Long countyId, RedirectAttributes redirectAttributes) {
         boolean deleteResult = countyService.deleteCountyById(countyId);
 
+        cityService.getAllCities().stream()
+                .filter(city -> city.getCounty().getId().equals(countyId))
+                .forEach(city -> cityService.deleteCityById(city.getId()));
+
         if (deleteResult) {
             redirectAttributes.addFlashAttribute("message", "County has been successfully deleted.");
             redirectAttributes.addFlashAttribute("messageType", "success");
@@ -119,6 +127,10 @@ public class CountyController {
             redirectAttributes.addFlashAttribute("message", "Error in restoring a county!");
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
+
+        cityService.getAllCities().stream()
+                .filter(city -> city.getCounty().getId().equals(countyId))
+                .forEach(city -> cityService.deleteCityById(city.getId()));
 
         return "redirect:/county/";
     }

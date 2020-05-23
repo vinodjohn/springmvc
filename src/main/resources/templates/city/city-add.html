@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <title>Update County | SDA Study Information System</title>
+    <title>Add City | SDA Study Information System</title>
 </head>
 <body>
     <div class="container-fluid">
@@ -15,7 +15,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
+                    <li class="nav-item active">
                         <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item">
@@ -44,25 +44,30 @@
         <br/>
         <div class="container">
             <div class="jumbotron">
-                <h4 class="display-4">Update County</h4>
+                <h4 class="display-4">Add City</h4>
                 <div th:if="${messageType} == 'error'" class="alert alert-danger" role="alert">
                     <span th:text="${message}"></span>
                 </div>
-                <form action="#" th:action="@{/county/update/{id}(id=${county.id})}" th:object="${county}" method="post">
-                    <div class="form-group">
-                        <label for="country">Select Country</label>
-                        <select th:field="*{country.id}" class="custom-select" id="country" required>
-                            <option th:each="country : ${countries}" th:value="${country.id}" th:text="${country.name}"></option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="name">County name</label>
-                        <input type="text" th:field="*{name}" class="form-control" id="name" aria-describedby="nameHelp" required>
-                    </div>
-                    <input type="hidden" th:field="*{active}" class="form-control" id="active">
-                    <button type="submit" class="btn btn-primary">Update</button>
-                    <a href="/county/" class="btn btn-success">Cancel</a>
-                </form>
+                    <form action="#" th:action="@{/city/add}" th:object="${city}" method="post">
+                        <div class="form-group">
+                            <label for="country">Select Country</label>
+                            <select th:field="*{country.id}" class="custom-select" id="country" required>
+                                <option th:each="country : ${countries}" th:value="${country.id}" th:text="${country.name}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="country">Select County</label>
+                            <select th:field="*{county.id}" class="custom-select" id="county" required>
+                                <option th:each="county : ${counties}" th:value="${county.id}" th:text="${county.name}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">City name</label>
+                            <input type="text" th:field="*{name}" class="form-control" id="name" aria-describedby="nameHelp" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                        <a href="/city/" class="btn btn-success">Cancel</a>
+                    </form>
             </div>
         </div>
     </div>
