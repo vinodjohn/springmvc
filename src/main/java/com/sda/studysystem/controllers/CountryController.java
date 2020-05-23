@@ -24,12 +24,6 @@ public class CountryController {
     @Autowired
     private CountryService countryService;
 
-    @Autowired
-    private CountyService countyService;
-
-    @Autowired
-    private CityService cityService;
-
     @GetMapping("")
     public String showAllCountries(@ModelAttribute("messageType") String messageType, @ModelAttribute("message") String message,
                                    Model model) {
@@ -77,13 +71,13 @@ public class CountryController {
         boolean updateResult = countryService.updateCountry(country);
 
         if (updateResult) {
-            redirectAttributes.addFlashAttribute("message", "Country has been successfully updated.");
+            redirectAttributes.addFlashAttribute("message", "Country #" + countryId + " has been successfully updated.");
             redirectAttributes.addFlashAttribute("messageType", "success");
             return "redirect:/country/";
         } else {
             redirectAttributes.addAttribute("id", countryId);
             redirectAttributes.addAttribute("country", country);
-            redirectAttributes.addFlashAttribute("message", "Error in updating a country!");
+            redirectAttributes.addFlashAttribute("message", "Error in updating this country #" + countryId + "!");
             redirectAttributes.addFlashAttribute("messageType", "error");
             return "redirect:/country/update/{id}";
         }
@@ -92,19 +86,12 @@ public class CountryController {
     @GetMapping("/delete/{id}")
     public String deleteCountry(@PathVariable("id") Long countryId, RedirectAttributes redirectAttributes) {
         boolean deleteResult = countryService.deleteCountryById(countryId);
-        countyService.getAllCounties().stream()
-                .filter(county -> county.getCountry().getId().equals(countryId))
-                .forEach(county -> countyService.deleteCountyById(county.getId()));
-
-        cityService.getAllCities().stream()
-                .filter(city -> city.getCountry().getId().equals(countryId))
-                .forEach(city -> cityService.deleteCityById(city.getId()));
 
         if (deleteResult) {
-            redirectAttributes.addFlashAttribute("message", "Country has been successfully deleted.");
+            redirectAttributes.addFlashAttribute("message", "Country #" + countryId + " has been successfully deleted.");
             redirectAttributes.addFlashAttribute("messageType", "success");
         } else {
-            redirectAttributes.addFlashAttribute("message", "Error in deleting a country!");
+            redirectAttributes.addFlashAttribute("message", "Error in deleting country #" + countryId + "!");
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
 
@@ -114,19 +101,12 @@ public class CountryController {
     @GetMapping("/restore/{id}")
     public String restoreCountry(@PathVariable("id") Long countryId, RedirectAttributes redirectAttributes) {
         boolean restoreResult = countryService.restoreCountryById(countryId);
-        countyService.getAllCounties().stream()
-                .filter(county -> county.getCountry().getId().equals(countryId))
-                .forEach(county -> countyService.restoreCountyById(county.getId()));
-
-        cityService.getAllCities().stream()
-                .filter(city -> city.getCountry().getId().equals(countryId))
-                .forEach(city -> cityService.deleteCityById(city.getId()));
 
         if (restoreResult) {
-            redirectAttributes.addFlashAttribute("message", "Country has been successfully restored.");
+            redirectAttributes.addFlashAttribute("message", "Country #" + countryId + " has been successfully restored.");
             redirectAttributes.addFlashAttribute("messageType", "success");
         } else {
-            redirectAttributes.addFlashAttribute("message", "Error in restoring a country!");
+            redirectAttributes.addFlashAttribute("message", "Error in restoring country #" + countryId + "!");
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
 

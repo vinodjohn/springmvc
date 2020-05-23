@@ -96,13 +96,13 @@ public class CityController {
         boolean updateResult = cityService.updateCity(city);
 
         if (updateResult) {
-            redirectAttributes.addFlashAttribute("message", "City has been successfully updated.");
+            redirectAttributes.addFlashAttribute("message", "City #" + cityId + " has been successfully updated.");
             redirectAttributes.addFlashAttribute("messageType", "success");
             return "redirect:/city/";
         } else {
             redirectAttributes.addAttribute("id", cityId);
             redirectAttributes.addAttribute("city", city);
-            redirectAttributes.addFlashAttribute("message", "Error in updating a city!");
+            redirectAttributes.addFlashAttribute("message", "Error in updating a city #" + cityId + "!");
             redirectAttributes.addFlashAttribute("messageType", "error");
             return "redirect:/city/update/{id}";
         }
@@ -113,10 +113,10 @@ public class CityController {
         boolean deleteResult = cityService.deleteCityById(cityId);
 
         if (deleteResult) {
-            redirectAttributes.addFlashAttribute("message", "City has been successfully deleted.");
+            redirectAttributes.addFlashAttribute("message", "City #" + cityId + " has been successfully deleted.");
             redirectAttributes.addFlashAttribute("messageType", "success");
         } else {
-            redirectAttributes.addFlashAttribute("message", "Error in deleting a city!");
+            redirectAttributes.addFlashAttribute("message", "Error in deleting a city #" + cityId + "!");
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
 
@@ -128,10 +128,10 @@ public class CityController {
         boolean restoreResult = cityService.restoreCityById(cityId);
 
         if (restoreResult) {
-            redirectAttributes.addFlashAttribute("message", "City has been successfully restored.");
+            redirectAttributes.addFlashAttribute("message", "City #" + cityId + "has been successfully restored.");
             redirectAttributes.addFlashAttribute("messageType", "success");
         } else {
-            redirectAttributes.addFlashAttribute("message", "Error in restoring a city!");
+            redirectAttributes.addFlashAttribute("message", "Error in restoring a city #" + cityId + "!");
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
 

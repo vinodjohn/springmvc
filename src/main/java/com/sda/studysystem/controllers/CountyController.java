@@ -29,9 +29,6 @@ public class CountyController {
     @Autowired
     private CountryService countryService;
 
-    @Autowired
-    private CityService cityService;
-
     @GetMapping("")
     public String showAllCounties(@ModelAttribute("messageType") String messageType, @ModelAttribute("message") String message,
                                   Model model) {
@@ -85,13 +82,13 @@ public class CountyController {
         boolean updateResult = countyService.updateCounty(county);
 
         if (updateResult) {
-            redirectAttributes.addFlashAttribute("message", "County has been successfully updated.");
+            redirectAttributes.addFlashAttribute("message", "County #" + countyId + "has been successfully updated.");
             redirectAttributes.addFlashAttribute("messageType", "success");
             return "redirect:/county/";
         } else {
             redirectAttributes.addAttribute("id", countyId);
             redirectAttributes.addAttribute("county", county);
-            redirectAttributes.addFlashAttribute("message", "Error in updating a county!");
+            redirectAttributes.addFlashAttribute("message", "Error in updating a county #" + countyId + "!");
             redirectAttributes.addFlashAttribute("messageType", "error");
             return "redirect:/county/update/{id}";
         }
@@ -101,15 +98,11 @@ public class CountyController {
     public String deleteCounty(@PathVariable("id") Long countyId, RedirectAttributes redirectAttributes) {
         boolean deleteResult = countyService.deleteCountyById(countyId);
 
-        cityService.getAllCities().stream()
-                .filter(city -> city.getCounty().getId().equals(countyId))
-                .forEach(city -> cityService.deleteCityById(city.getId()));
-
         if (deleteResult) {
-            redirectAttributes.addFlashAttribute("message", "County has been successfully deleted.");
+            redirectAttributes.addFlashAttribute("message", "County #" + countyId + "has been successfully deleted.");
             redirectAttributes.addFlashAttribute("messageType", "success");
         } else {
-            redirectAttributes.addFlashAttribute("message", "Error in deleting a county!");
+            redirectAttributes.addFlashAttribute("message", "Error in deleting a county #" + countyId + "!");
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
 
@@ -121,16 +114,12 @@ public class CountyController {
         boolean restoreResult = countyService.restoreCountyById(countyId);
 
         if (restoreResult) {
-            redirectAttributes.addFlashAttribute("message", "County has been successfully restored.");
+            redirectAttributes.addFlashAttribute("message", "County #" + countyId + " has been successfully restored.");
             redirectAttributes.addFlashAttribute("messageType", "success");
         } else {
-            redirectAttributes.addFlashAttribute("message", "Error in restoring a county!");
+            redirectAttributes.addFlashAttribute("message", "Error in restoring a county #" + countyId + "!");
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
-
-        cityService.getAllCities().stream()
-                .filter(city -> city.getCounty().getId().equals(countyId))
-                .forEach(city -> cityService.deleteCityById(city.getId()));
 
         return "redirect:/county/";
     }

@@ -18,6 +18,12 @@ public class CountryServiceImpl implements CountryService {
     @Autowired
     private CountryRepository countryRepository;
 
+    @Autowired
+    private CountyService countyService;
+
+    @Autowired
+    private CityService cityService;
+
     @Override
     public boolean createCountry(Country country) {
         if (country == null) {
@@ -57,6 +63,14 @@ public class CountryServiceImpl implements CountryService {
 
         country.setActive(false);
         updateCountry(country);
+
+        countyService.getAllCounties().stream()
+                .filter(county -> county.getCountry().getId().equals(countryId))
+                .forEach(county -> countyService.deleteCountyById(county.getId()));
+
+        cityService.getAllCities().stream()
+                .filter(city -> city.getCountry().getId().equals(countryId))
+                .forEach(city -> cityService.deleteCityById(city.getId()));
         return true;
     }
 
@@ -68,7 +82,17 @@ public class CountryServiceImpl implements CountryService {
         }
 
         country.setActive(true);
-        return updateCountry(country);
+        updateCountry(country);
+
+        countyService.getAllCounties().stream()
+                .filter(county -> county.getCountry().getId().equals(countryId))
+                .forEach(county -> countyService.restoreCountyById(county.getId()));
+
+        cityService.getAllCities().stream()
+                .filter(city -> city.getCountry().getId().equals(countryId))
+                .forEach(city -> cityService.restoreCityById(city.getId()));
+
+        return true;
     }
 }
 
