@@ -12,6 +12,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Controller to County requests
  *
@@ -37,7 +39,8 @@ public class CountyController {
     @GetMapping("/add")
     public String addCountyForm(@ModelAttribute("county") County county, @ModelAttribute("messageType") String messageType,
                                  @ModelAttribute("message") String message, Model model) {
-        List<Country> countries = countryService.getAllCountries();
+        List<Country> countries = countryService.getAllCountries().stream()
+                .filter(Country::isActive).collect(Collectors.toList());
         model.addAttribute("countries", countries);
         return "county/county-add";
     }
@@ -66,6 +69,9 @@ public class CountyController {
             model.addAttribute("county", countyService.getById(countyId));
         }
 
+        List<Country> countries = countryService.getAllCountries().stream()
+                .filter(Country::isActive).collect(Collectors.toList());
+        model.addAttribute("countries", countries);
         return "county/county-update";
     }
 
