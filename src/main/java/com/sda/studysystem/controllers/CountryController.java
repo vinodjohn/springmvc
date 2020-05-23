@@ -8,8 +8,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * Controller to Country requests
+ *
+ * @author VinodJohn
+ */
 @Controller
 @RequestMapping("/country")
 public class CountryController {
@@ -31,13 +37,8 @@ public class CountryController {
     }
 
     @PostMapping("/add")
-    public String addCountry(Country country, RedirectAttributes redirectAttributes) {
-        boolean createResult = false;
-
-        if (isCountryValid(country)) {
-            country.setActive(true);
-            createResult = countryService.createCountry(country);
-        }
+    public String addCountry(@Valid Country country, RedirectAttributes redirectAttributes) {
+        boolean createResult = countryService.createCountry(country);
 
         if (createResult) {
             redirectAttributes.addFlashAttribute("message", "Country has been successfully created.");
@@ -63,13 +64,9 @@ public class CountryController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateCountry(@PathVariable("id") Long countryId, Country country, RedirectAttributes redirectAttributes) {
-        boolean updateResult = false;
-
-        if (isCountryValid(country)) {
-            country.setId(countryId);
-            updateResult = countryService.updateCountry(country);
-        }
+    public String updateCountry(@PathVariable("id") Long countryId, @Valid Country country, RedirectAttributes redirectAttributes) {
+        country.setId(countryId);
+        boolean updateResult = countryService.updateCountry(country);
 
         if (updateResult) {
             redirectAttributes.addFlashAttribute("message", "Country has been successfully updated.");
@@ -112,10 +109,6 @@ public class CountryController {
         }
 
         return "redirect:/country/";
-    }
-
-    private boolean isCountryValid(Country country) {
-        return !country.getName().isEmpty();
     }
 }
 

@@ -23,6 +23,8 @@ public class CategoryServiceImpl implements CategoryService {
         if (category == null) {
             return false;
         }
+
+        category.setActive(true);
         categoryRepository.save(category);
         return true;
     }

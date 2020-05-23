@@ -33,7 +33,6 @@ public class SpecializedFieldController {
 
     @PostMapping("/add")
     public String addSpecializedField(SpecializedField specializedField, Model model) {
-        specializedField.setActive(true);
         boolean createResult = specializedFieldService.createSpecializedField(specializedField);
 
         if (createResult) {

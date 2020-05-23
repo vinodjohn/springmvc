@@ -23,6 +23,8 @@ public class SchoolServiceImpl implements SchoolService {
         if (school == null) {
             return false;
         }
+
+        school.setActive(true);
         schoolRepository.save(school);
         return true;
     }

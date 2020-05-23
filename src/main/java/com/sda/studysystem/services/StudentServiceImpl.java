@@ -23,6 +23,8 @@ public class StudentServiceImpl implements StudentService {
         if (student == null) {
             return false;
         }
+
+        student.setActive(true);
         studentRepository.save(student);
         return true;
     }

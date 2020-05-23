@@ -23,6 +23,8 @@ public class CityServiceImpl implements CityService {
         if (city == null) {
             return false;
         }
+
+        city.setActive(true);
         cityRepository.save(city);
         return true;
     }

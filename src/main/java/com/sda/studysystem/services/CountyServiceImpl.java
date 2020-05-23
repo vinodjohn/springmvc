@@ -23,6 +23,8 @@ public class CountyServiceImpl implements CountyService {
         if (county == null) {
             return false;
         }
+
+        county.setActive(true);
         countyRepository.save(county);
         return true;
     }

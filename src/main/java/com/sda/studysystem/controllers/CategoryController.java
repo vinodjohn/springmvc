@@ -32,7 +32,6 @@ public class CategoryController {
 
     @PostMapping("/add")
     public String addCategory(Category category, Model model) {
-        category.setActive(true);
         boolean createResult = categoryService.createCategory(category);
 
         if (createResult) {

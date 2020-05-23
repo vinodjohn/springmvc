@@ -38,7 +38,6 @@ public class TeacherController {
 
     @PostMapping("/add")
     public String addTeacher(Teacher teacher, Model model) {
-        teacher.setActive(true);
         boolean createResult = teacherService.createTeacher(teacher);
 
         if (createResult) {

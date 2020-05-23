@@ -23,6 +23,8 @@ public class TeacherServiceImpl implements TeacherService {
         if (teacher == null) {
             return false;
         }
+
+        teacher.setActive(true);
         teacherRepository.save(teacher);
         return true;
     }

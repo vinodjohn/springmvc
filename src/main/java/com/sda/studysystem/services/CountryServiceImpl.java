@@ -23,6 +23,7 @@ public class CountryServiceImpl implements CountryService {
         if (country == null) {
             return false;
         }
+        country.setActive(true);
         countryRepository.save(country);
         return true;
     }
