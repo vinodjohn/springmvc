@@ -56,7 +56,7 @@ public class CityController {
     }
 
     @PostMapping("/add")
-    public String addCity(@Valid City city, RedirectAttributes redirectAttributes) {
+    public String addCity(City city, RedirectAttributes redirectAttributes) {
         boolean createResult = cityService.createCity(city);
 
         if (createResult) {

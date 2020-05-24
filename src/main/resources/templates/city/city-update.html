@@ -56,7 +56,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="country">Select County</label>
+                        <label for="county">Select County</label>
                         <select th:field="*{county.id}" class="custom-select" id="county" required>
                             <option th:each="county : ${counties}" th:value="${county.id}" th:text="${county.name}"></option>
                         </select>

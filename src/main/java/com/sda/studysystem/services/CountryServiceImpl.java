@@ -21,9 +21,6 @@ public class CountryServiceImpl implements CountryService {
     @Autowired
     private CountyService countyService;
 
-    @Autowired
-    private CityService cityService;
-
     @Override
     public boolean createCountry(Country country) {
         if (country == null) {
@@ -57,7 +54,7 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public boolean deleteCountryById(Long countryId) {
         Country country = getById(countryId);
-        if (countryId == null) {
+        if (country == null) {
             return false;
         }
 
@@ -68,16 +65,13 @@ public class CountryServiceImpl implements CountryService {
                 .filter(county -> county.getCountry().getId().equals(countryId))
                 .forEach(county -> countyService.deleteCountyById(county.getId()));
 
-        cityService.getAllCities().stream()
-                .filter(city -> city.getCountry().getId().equals(countryId))
-                .forEach(city -> cityService.deleteCityById(city.getId()));
         return true;
     }
 
     @Override
     public boolean restoreCountryById(Long countryId) {
         Country country = getById(countryId);
-        if (countryId == null) {
+        if (country == null) {
             return false;
         }
 
@@ -87,10 +81,6 @@ public class CountryServiceImpl implements CountryService {
         countyService.getAllCounties().stream()
                 .filter(county -> county.getCountry().getId().equals(countryId))
                 .forEach(county -> countyService.restoreCountyById(county.getId()));
-
-        cityService.getAllCities().stream()
-                .filter(city -> city.getCountry().getId().equals(countryId))
-                .forEach(city -> cityService.restoreCityById(city.getId()));
 
         return true;
     }

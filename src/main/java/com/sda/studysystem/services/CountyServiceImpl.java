@@ -58,7 +58,7 @@ public class CountyServiceImpl implements CountyService {
     @Override
     public boolean deleteCountyById(Long countyId) {
         County county = getById(countyId);
-        if (countyId == null) {
+        if (county == null) {
             return false;
         }
 
@@ -76,7 +76,7 @@ public class CountyServiceImpl implements CountyService {
     public boolean restoreCountyById(Long countyId) {
         County county = getById(countyId);
 
-        if (countyId == null || !countryService.getById(county.getCountry().getId()).isActive()) {
+        if (county == null || !countryService.getById(county.getCountry().getId()).isActive()) {
             return false;
         }
 

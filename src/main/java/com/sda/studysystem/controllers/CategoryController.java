@@ -5,13 +5,17 @@ import com.sda.studysystem.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * Controller to Category requests
+ *
+ * @author VinodJohn
+ */
 @Controller
 @RequestMapping("/category")
 public class CategoryController {
@@ -19,83 +23,93 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("")
-    public String showAllCategories(Model model) {
+    public String showAllCategories(@ModelAttribute("messageType") String messageType, @ModelAttribute("message") String message,
+                                    Model model) {
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
-        return "show-all-categories";
+        return "category/category-list";
     }
 
     @GetMapping("/add")
-    public String addCategoryForm(Model model) {
-        return "add-category";
+    public String addCategoryForm(@ModelAttribute("category") Category category, @ModelAttribute("messageType") String messageType,
+                                  @ModelAttribute("message") String message) {
+        return "category/category-add";
     }
 
     @PostMapping("/add")
-    public String addCategory(Category category, Model model) {
+    public String addCategory(@Valid Category category, RedirectAttributes redirectAttributes) {
         boolean createResult = categoryService.createCategory(category);
 
         if (createResult) {
-            model.addAttribute("message", "Category has been successfully created.");
-            model.addAttribute("messageType", "success");
-            return showAllCategories(model);
+            redirectAttributes.addFlashAttribute("message", "Category has been successfully created.");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+            return "redirect:/category/";
         } else {
-            model.addAttribute("category", category);
-            model.addAttribute("message", "Error in creating a category!");
-            model.addAttribute("messageType", "error");
-            return addCategoryForm(model);
+            redirectAttributes.addFlashAttribute("category", category);
+            redirectAttributes.addFlashAttribute("message", "Error in creating a category!");
+            redirectAttributes.addFlashAttribute("messageType", "error");
+            return "redirect:/category/add";
         }
     }
 
-    @GetMapping("/update")
-    public String updateCategoryForm(Model model) {
-        return "update-category";
+    @GetMapping("/update/{id}")
+    public String updateCategoryForm(@PathVariable("id") Long categoryId, @RequestParam(value = "category", required = false) Category category,
+                                     @ModelAttribute("messageType") String messageType,
+                                     @ModelAttribute("message") String message, Model model) {
+        if (category == null) {
+            model.addAttribute("category", categoryService.getById(categoryId));
+        }
+
+        return "category/category-update";
     }
 
     @PostMapping("/update/{id}")
-    public String updateCategory(@PathVariable("id") Long categoryId, Category category, Model model) {
+    public String updateCategory(@PathVariable("id") Long categoryId, @Valid Category category, RedirectAttributes redirectAttributes) {
         category.setId(categoryId);
         boolean updateResult = categoryService.updateCategory(category);
 
         if (updateResult) {
-            model.addAttribute("message", "Category has been successfully updated.");
-            model.addAttribute("messageType", "success");
-            return showAllCategories(model);
+            redirectAttributes.addFlashAttribute("message", "Category #" + categoryId + " has been successfully updated.");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+            return "redirect:/category/";
         } else {
-            model.addAttribute("category", category);
-            model.addAttribute("message", "Error in updating a category!");
-            model.addAttribute("messageType", "error");
-            return updateCategoryForm(model);
+            redirectAttributes.addAttribute("id", categoryId);
+            redirectAttributes.addAttribute("category", category);
+            redirectAttributes.addFlashAttribute("message", "Error in updating this category #" + categoryId + "!");
+            redirectAttributes.addFlashAttribute("messageType", "error");
+            return "redirect:/category/update/{id}";
         }
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteCategory(@PathVariable("id") Long categoryId, Model model) {
+    public String deleteCategory(@PathVariable("id") Long categoryId, RedirectAttributes redirectAttributes) {
         boolean deleteResult = categoryService.deleteCategoryById(categoryId);
 
         if (deleteResult) {
-            model.addAttribute("message", "Category has been successfully deleted.");
-            model.addAttribute("messageType", "success");
+            redirectAttributes.addFlashAttribute("message", "Category #" + categoryId + " has been successfully deleted.");
+            redirectAttributes.addFlashAttribute("messageType", "success");
         } else {
-            model.addAttribute("message", "Error in deleting a category!");
-            model.addAttribute("messageType", "error");
+            redirectAttributes.addFlashAttribute("message", "Error in deleting category #" + categoryId + "!");
+            redirectAttributes.addFlashAttribute("messageType", "error");
         }
 
-        return showAllCategories(model);
+        return "redirect:/category/";
     }
 
     @GetMapping("/restore/{id}")
-    public String restoreCategory(@PathVariable("id") Long categoryId, Model model) {
+    public String restoreCategory(@PathVariable("id") Long categoryId, RedirectAttributes redirectAttributes) {
         boolean restoreResult = categoryService.restoreCategoryById(categoryId);
 
         if (restoreResult) {
-            model.addAttribute("message", "Category has been successfully restored.");
-            model.addAttribute("messageType", "success");
+            redirectAttributes.addFlashAttribute("message", "Category #" + categoryId + " has been successfully restored.");
+            redirectAttributes.addFlashAttribute("messageType", "success");
         } else {
-            model.addAttribute("message", "Error in restoring a category!");
-            model.addAttribute("messageType", "error");
+            redirectAttributes.addFlashAttribute("message", "Error in restoring category #" + categoryId + "!");
+            redirectAttributes.addFlashAttribute("messageType", "error");
         }
 
-        return showAllCategories(model);
+        return "redirect:/category/";
     }
 }
+
 

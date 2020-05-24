@@ -1,101 +1,154 @@
 package com.sda.studysystem.controllers;
 
+import com.sda.studysystem.models.City;
+import com.sda.studysystem.models.Country;
 import com.sda.studysystem.models.School;
+import com.sda.studysystem.models.County;
+import com.sda.studysystem.services.CityService;
+import com.sda.studysystem.services.CountryService;
 import com.sda.studysystem.services.SchoolService;
+import com.sda.studysystem.services.CountyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
+/**
+ * Controller to School requests
+ *
+ * @author VinodJohn
+ */
 @Controller
 @RequestMapping("/school")
 public class SchoolController {
     @Autowired
     private SchoolService schoolService;
 
+    @Autowired
+    private CountryService countryService;
+
+    @Autowired
+    private CountyService countyService;
+
+    @Autowired
+    private CityService cityService;
+
     @GetMapping("")
-    public String showAllSchools(Model model) {
+    public String showAllSchools(@ModelAttribute("messageType") String messageType, @ModelAttribute("message") String message,
+                                Model model) {
         List<School> schools = schoolService.getAllSchools();
         model.addAttribute("schools", schools);
-        return "show-all-schools";
+        return "school/school-list";
     }
 
     @GetMapping("/add")
-    public String addSchoolForm(Model model) {
-        return "add-school";
+    public String addSchoolForm(@ModelAttribute("school") School school, @ModelAttribute("messageType") String messageType,
+                              @ModelAttribute("message") String message, Model model) {
+        List<Country> countries = countryService.getAllCountries().stream()
+                .filter(Country::isActive).collect(Collectors.toList());
+        model.addAttribute("countries", countries);
+
+        List<County> counties = countyService.getAllCounties().stream()
+                .filter(County::isActive).collect(Collectors.toList());
+        model.addAttribute("counties", counties);
+
+        List<City> cities = cityService.getAllCities().stream()
+                .filter(City::isActive).collect(Collectors.toList());
+        model.addAttribute("cities", cities);
+
+        return "school/school-add";
     }
 
     @PostMapping("/add")
-    public String addSchool(School school, Model model) {
+    public String addSchool(School school, RedirectAttributes redirectAttributes) {
         boolean createResult = schoolService.createSchool(school);
 
         if (createResult) {
-            model.addAttribute("message", "School has been successfully created.");
-            model.addAttribute("messageType", "success");
-            return showAllSchools(model);
+            redirectAttributes.addFlashAttribute("message", "School has been successfully created.");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+            return "redirect:/school/";
         } else {
-            model.addAttribute("school", school);
-            model.addAttribute("message", "Error in creating a school!");
-            model.addAttribute("messageType", "error");
-            return addSchoolForm(model);
+            redirectAttributes.addFlashAttribute("school", school);
+            redirectAttributes.addFlashAttribute("message", "Error in creating a school!");
+            redirectAttributes.addFlashAttribute("messageType", "error");
+            return "redirect:/school/add";
         }
     }
 
-    @GetMapping("/update")
-    public String updateSchoolForm(Model model) {
-        return "update-school";
+    @GetMapping("/update/{id}")
+    public String updateSchoolForm(@PathVariable("id") Long schoolId, @RequestParam(value = "school", required = false) School school,
+                                 @ModelAttribute("messageType") String messageType,
+                                 @ModelAttribute("message") String message, Model model) {
+        if (school == null) {
+            model.addAttribute("school", schoolService.getById(schoolId));
+        }
+
+        List<Country> countries = countryService.getAllCountries().stream()
+                .filter(Country::isActive).collect(Collectors.toList());
+        model.addAttribute("countries", countries);
+
+        List<County> counties = countyService.getAllCounties().stream()
+                .filter(County::isActive).collect(Collectors.toList());
+        model.addAttribute("counties", counties);
+
+        List<City> cities = cityService.getAllCities().stream()
+                .filter(City::isActive).collect(Collectors.toList());
+        model.addAttribute("cities", cities);
+
+        return "school/school-update";
     }
 
     @PostMapping("/update/{id}")
-    public String updateSchool(@PathVariable("id") Long schoolId, School school, Model model) {
+    public String updateSchool(@PathVariable("id") Long schoolId, @Valid School school, RedirectAttributes redirectAttributes) {
         school.setId(schoolId);
         boolean updateResult = schoolService.updateSchool(school);
 
         if (updateResult) {
-            model.addAttribute("message", "School has been successfully updated.");
-            model.addAttribute("messageType", "success");
-            return showAllSchools(model);
+            redirectAttributes.addFlashAttribute("message", "School #" + schoolId + " has been successfully updated.");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+            return "redirect:/school/";
         } else {
-            model.addAttribute("school", school);
-            model.addAttribute("message", "Error in updating a school!");
-            model.addAttribute("messageType", "error");
-            return updateSchoolForm(model);
+            redirectAttributes.addAttribute("id", schoolId);
+            redirectAttributes.addAttribute("school", school);
+            redirectAttributes.addFlashAttribute("message", "Error in updating a school #" + schoolId + "!");
+            redirectAttributes.addFlashAttribute("messageType", "error");
+            return "redirect:/school/update/{id}";
         }
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteSchool(@PathVariable("id") Long schoolId, Model model) {
+    public String deleteSchool(@PathVariable("id") Long schoolId, RedirectAttributes redirectAttributes) {
         boolean deleteResult = schoolService.deleteSchoolById(schoolId);
 
         if (deleteResult) {
-            model.addAttribute("message", "School has been successfully deleted.");
-            model.addAttribute("messageType", "success");
+            redirectAttributes.addFlashAttribute("message", "School #" + schoolId + " has been successfully deleted.");
+            redirectAttributes.addFlashAttribute("messageType", "success");
         } else {
-            model.addAttribute("message", "Error in deleting a school!");
-            model.addAttribute("messageType", "error");
+            redirectAttributes.addFlashAttribute("message", "Error in deleting a school #" + schoolId + "!");
+            redirectAttributes.addFlashAttribute("messageType", "error");
         }
 
-        return showAllSchools(model);
+        return "redirect:/school/";
     }
 
     @GetMapping("/restore/{id}")
-    public String restoreSchool(@PathVariable("id") Long schoolId, Model model) {
+    public String restoreSchool(@PathVariable("id") Long schoolId, RedirectAttributes redirectAttributes) {
         boolean restoreResult = schoolService.restoreSchoolById(schoolId);
 
         if (restoreResult) {
-            model.addAttribute("message", "School has been successfully restored.");
-            model.addAttribute("messageType", "success");
+            redirectAttributes.addFlashAttribute("message", "School #" + schoolId + "has been successfully restored.");
+            redirectAttributes.addFlashAttribute("messageType", "success");
         } else {
-            model.addAttribute("message", "Error in restoring a school!");
-            model.addAttribute("messageType", "error");
+            redirectAttributes.addFlashAttribute("message", "Error in restoring a school #" + schoolId + "!");
+            redirectAttributes.addFlashAttribute("messageType", "error");
         }
 
-        return showAllSchools(model);
+        return "redirect:/school/";
     }
 }
 

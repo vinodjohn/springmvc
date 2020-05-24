@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <title>Add City | SDA Study Information System</title>
+    <title>Add School | SDA Study Information System</title>
 </head>
 <body>
     <div class="container-fluid">
@@ -44,11 +44,11 @@
         <br/>
         <div class="container">
             <div class="jumbotron">
-                <h4 class="display-4">Add City</h4>
+                <h4 class="display-4">Add School</h4>
                 <div th:if="${messageType} == 'error'" class="alert alert-danger" role="alert">
                     <span th:text="${message}"></span>
                 </div>
-                    <form action="#" th:action="@{/city/add}" th:object="${city}" method="post">
+                    <form action="#" th:action="@{/school/add}" th:object="${school}" method="post">
                         <div class="form-group">
                             <label for="country">Select Country</label>
                             <select th:field="*{country.id}" class="custom-select" id="country" required>
@@ -62,11 +62,25 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="name">City name</label>
+                            <label for="city">Select City</label>
+                            <select th:field="*{city.id}" class="custom-select" id="city" required>
+                                <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="street">Street</label>
+                            <input type="text" th:field="*{street}" class="form-control" id="street" aria-describedby="streetHelp" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="zipcode">Zip code</label>
+                            <input type="text" th:field="*{zipcode}" class="form-control" id="zipcode" aria-describedby="zipcodeHelp" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">School name</label>
                             <input type="text" th:field="*{name}" class="form-control" id="name" aria-describedby="nameHelp" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Add</button>
-                        <a href="/city/" class="btn btn-success">Cancel</a>
+                        <a href="/school/" class="btn btn-success">Cancel</a>
                     </form>
             </div>
         </div>
