@@ -1,10 +1,10 @@
 package com.sda.studysystem.controllers;
 
-import com.sda.studysystem.models.Country;
 import com.sda.studysystem.models.City;
+import com.sda.studysystem.models.Country;
 import com.sda.studysystem.models.County;
-import com.sda.studysystem.services.CountryService;
 import com.sda.studysystem.services.CityService;
+import com.sda.studysystem.services.CountryService;
 import com.sda.studysystem.services.CountyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Controller to City requests
+ * Controller to handle City requests
  *
  * @author VinodJohn
  */
@@ -35,7 +35,7 @@ public class CityController {
 
     @GetMapping("")
     public String showAllCities(@ModelAttribute("messageType") String messageType, @ModelAttribute("message") String message,
-                                  Model model) {
+                                Model model) {
         List<City> cities = cityService.getAllCities();
         model.addAttribute("cities", cities);
         return "city/city-list";
@@ -43,7 +43,7 @@ public class CityController {
 
     @GetMapping("/add")
     public String addCityForm(@ModelAttribute("city") City city, @ModelAttribute("messageType") String messageType,
-                                @ModelAttribute("message") String message, Model model) {
+                              @ModelAttribute("message") String message, Model model) {
         List<Country> countries = countryService.getAllCountries().stream()
                 .filter(Country::isActive).collect(Collectors.toList());
         model.addAttribute("countries", countries);
@@ -73,8 +73,8 @@ public class CityController {
 
     @GetMapping("/update/{id}")
     public String updateCityForm(@PathVariable("id") Long cityId, @RequestParam(value = "city", required = false) City city,
-                                   @ModelAttribute("messageType") String messageType,
-                                   @ModelAttribute("message") String message, Model model) {
+                                 @ModelAttribute("messageType") String messageType,
+                                 @ModelAttribute("message") String message, Model model) {
         if (city == null) {
             model.addAttribute("city", cityService.getById(cityId));
         }

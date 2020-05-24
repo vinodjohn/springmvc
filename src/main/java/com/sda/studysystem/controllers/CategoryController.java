@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * Controller to Category requests
+ * Controller to handle Category requests
  *
  * @author VinodJohn
  */

@@ -2,12 +2,12 @@ package com.sda.studysystem.controllers;
 
 import com.sda.studysystem.models.City;
 import com.sda.studysystem.models.Country;
-import com.sda.studysystem.models.School;
 import com.sda.studysystem.models.County;
+import com.sda.studysystem.models.School;
 import com.sda.studysystem.services.CityService;
 import com.sda.studysystem.services.CountryService;
-import com.sda.studysystem.services.SchoolService;
 import com.sda.studysystem.services.CountyService;
+import com.sda.studysystem.services.SchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Controller to School requests
+ * Controller to handle School requests
  *
  * @author VinodJohn
  */
@@ -40,7 +40,7 @@ public class SchoolController {
 
     @GetMapping("")
     public String showAllSchools(@ModelAttribute("messageType") String messageType, @ModelAttribute("message") String message,
-                                Model model) {
+                                 Model model) {
         List<School> schools = schoolService.getAllSchools();
         model.addAttribute("schools", schools);
         return "school/school-list";
@@ -48,7 +48,7 @@ public class SchoolController {
 
     @GetMapping("/add")
     public String addSchoolForm(@ModelAttribute("school") School school, @ModelAttribute("messageType") String messageType,
-                              @ModelAttribute("message") String message, Model model) {
+                                @ModelAttribute("message") String message, Model model) {
         List<Country> countries = countryService.getAllCountries().stream()
                 .filter(Country::isActive).collect(Collectors.toList());
         model.addAttribute("countries", countries);
@@ -82,8 +82,8 @@ public class SchoolController {
 
     @GetMapping("/update/{id}")
     public String updateSchoolForm(@PathVariable("id") Long schoolId, @RequestParam(value = "school", required = false) School school,
-                                 @ModelAttribute("messageType") String messageType,
-                                 @ModelAttribute("message") String message, Model model) {
+                                   @ModelAttribute("messageType") String messageType,
+                                   @ModelAttribute("message") String message, Model model) {
         if (school == null) {
             model.addAttribute("school", schoolService.getById(schoolId));
         }

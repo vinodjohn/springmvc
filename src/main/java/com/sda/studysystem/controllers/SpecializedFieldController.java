@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Controller to SpecializedField requests
+ * Controller to handle SpecializedField requests
  *
  * @author VinodJohn
  */

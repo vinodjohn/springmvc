@@ -18,6 +18,9 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
+    @Autowired
+    private SchoolService schoolService;
+
     @Override
     public boolean createStudent(Student student) {
         if (student == null) {
@@ -52,19 +55,19 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public boolean deleteStudentById(Long studentId) {
         Student student = getById(studentId);
-        if (studentId == null) {
+        if (student == null) {
             return false;
         }
 
         student.setActive(false);
-        updateStudent(student);
-        return true;
+        return updateStudent(student);
     }
 
     @Override
     public boolean restoreStudentById(Long studentId) {
         Student student = getById(studentId);
-        if (studentId == null) {
+
+        if (student == null || !schoolService.getById(student.getSchool().getId()).isActive()) {
             return false;
         }
 

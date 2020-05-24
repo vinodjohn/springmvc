@@ -1,9 +1,7 @@
 package com.sda.studysystem.controllers;
 
 import com.sda.studysystem.models.Country;
-import com.sda.studysystem.services.CityService;
 import com.sda.studysystem.services.CountryService;
-import com.sda.studysystem.services.CountyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * Controller to Country requests
+ * Controller to handle Country requests
  *
  * @author VinodJohn
  */
