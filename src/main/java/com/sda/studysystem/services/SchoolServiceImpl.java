@@ -66,8 +66,7 @@ public class SchoolServiceImpl implements SchoolService {
         }
 
         school.setActive(false);
-        updateSchool(school);
-        return true;
+        return updateSchool(school);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.sda.studysystem.services;
 
 import com.sda.studysystem.models.SpecializedField;
-import com.sda.studysystem.models.SpecializedField;
 import com.sda.studysystem.repositories.SpecializedFieldRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +17,9 @@ import java.util.List;
 public class SpecializedFieldServiceImpl implements SpecializedFieldService {
     @Autowired
     private SpecializedFieldRepository specializedFieldRepository;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Override
     public boolean createSpecializedField(SpecializedField specializedField) {
@@ -53,19 +55,19 @@ public class SpecializedFieldServiceImpl implements SpecializedFieldService {
     @Override
     public boolean deleteSpecializedFieldById(Long specializedFieldId) {
         SpecializedField specializedField = getById(specializedFieldId);
-        if (specializedFieldId == null) {
+        if (specializedField == null) {
             return false;
         }
 
         specializedField.setActive(false);
-        updateSpecializedField(specializedField);
-        return true;
+        return updateSpecializedField(specializedField);
     }
 
     @Override
     public boolean restoreSpecializedFieldById(Long specializedFieldId) {
         SpecializedField specializedField = getById(specializedFieldId);
-        if (specializedFieldId == null) {
+
+        if (specializedField == null || !categoryService.getById(specializedField.getCategory().getId()).isActive()) {
             return false;
         }
 
@@ -73,4 +75,3 @@ public class SpecializedFieldServiceImpl implements SpecializedFieldService {
         return updateSpecializedField(specializedField);
     }
 }
-
