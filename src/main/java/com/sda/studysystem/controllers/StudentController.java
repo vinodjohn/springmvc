@@ -1,19 +1,13 @@
 package com.sda.studysystem.controllers;
 
-import com.sda.studysystem.models.School;
 import com.sda.studysystem.models.Student;
-import com.sda.studysystem.services.SchoolService;
 import com.sda.studysystem.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Controller to handle Student requests

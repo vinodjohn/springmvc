@@ -1,9 +1,6 @@
 package com.sda.studysystem.controllers;
 
 import com.sda.studysystem.models.School;
-import com.sda.studysystem.services.CityService;
-import com.sda.studysystem.services.CountryService;
-import com.sda.studysystem.services.CountyService;
 import com.sda.studysystem.services.SchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
