@@ -19,6 +19,4 @@ public class City {
     private boolean isActive;
     @OneToOne
     private County county;
-    @OneToOne
-    private Country country;
 }

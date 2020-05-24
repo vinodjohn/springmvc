@@ -24,7 +24,9 @@ public class Student {
     private LocalDate joinDate;
 
     private boolean isActive;
+
     @OneToOne
     private School school;
+
     private int grade;
 }
