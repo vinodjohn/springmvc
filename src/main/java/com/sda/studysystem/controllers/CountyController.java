@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  *
  * @author VinodJohn
  */
-@Controller
+@RestController
 @RequestMapping("/county")
 public class CountyController {
     @Autowired
@@ -29,11 +29,8 @@ public class CountyController {
     private CountryService countryService;
 
     @GetMapping("")
-    public String showAllCounties(@ModelAttribute("messageType") String messageType, @ModelAttribute("message") String message,
-                                  Model model) {
-        List<County> counties = countyService.getAllCounties();
-        model.addAttribute("counties", counties);
-        return "county/county-list";
+    public List<County> showAllCounties() {
+        return countyService.getAllCounties();
     }
 
     @GetMapping("/add")

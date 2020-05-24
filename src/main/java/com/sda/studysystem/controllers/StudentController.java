@@ -5,7 +5,8 @@ import com.sda.studysystem.models.Student;
 import com.sda.studysystem.services.SchoolService;
 import com.sda.studysystem.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -19,108 +20,40 @@ import java.util.stream.Collectors;
  *
  * @author VinodJohn
  */
-@Controller
+@RestController
 @RequestMapping("/student")
 public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    @Autowired
-    private SchoolService schoolService;
-
     @GetMapping("")
-    public String showAllStudents(@ModelAttribute("messageType") String messageType, @ModelAttribute("message") String message,
-                                  Model model) {
-        List<Student> students = studentService.getAllStudents();
-        model.addAttribute("students", students);
-        return "student/student-list";
-    }
-
-    @GetMapping("/add")
-    public String addStudentForm(@ModelAttribute("student") Student student, @ModelAttribute("messageType") String messageType,
-                                 @ModelAttribute("message") String message, Model model) {
-        List<School> schools = schoolService.getAllSchools().stream()
-                .filter(School::isActive).collect(Collectors.toList());
-        model.addAttribute("schools", schools);
-        return "student/student-add";
+    public List<Student> showAllStudents() {
+        return studentService.getAllStudents();
     }
 
     @PostMapping("/add")
-    public String addStudent(@Valid Student student, RedirectAttributes redirectAttributes) {
-        boolean createResult = studentService.createStudent(student);
-
-        if (createResult) {
-            redirectAttributes.addFlashAttribute("message", "Student has been successfully created.");
-            redirectAttributes.addFlashAttribute("messageType", "success");
-            return "redirect:/student/";
-        } else {
-            redirectAttributes.addFlashAttribute("student", student);
-            redirectAttributes.addFlashAttribute("message", "Error in creating a student!");
-            redirectAttributes.addFlashAttribute("messageType", "error");
-            return "redirect:/student/add";
-        }
-    }
-
-    @GetMapping("/update/{id}")
-    public String updateStudentForm(@PathVariable("id") Long studentId, @RequestParam(value = "student", required = false) Student student,
-                                    @ModelAttribute("messageType") String messageType,
-                                    @ModelAttribute("message") String message, Model model) {
-        if (student == null) {
-            model.addAttribute("student", studentService.getById(studentId));
-        }
-
-        List<School> schools = schoolService.getAllSchools().stream()
-                .filter(School::isActive).collect(Collectors.toList());
-        model.addAttribute("schools", schools);
-        return "student/student-update";
+    public ResponseEntity<Student> addStudent(Student student) {
+        studentService.createStudent(student);
+        return new ResponseEntity<>(student, HttpStatus.CREATED);
     }
 
     @PostMapping("/update/{id}")
-    public String updateStudent(@PathVariable("id") Long studentId, @Valid Student student, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<Student> updateStudent(@PathVariable("id") Long studentId, Student student) {
         student.setId(studentId);
-        boolean updateResult = studentService.updateStudent(student);
-
-        if (updateResult) {
-            redirectAttributes.addFlashAttribute("message", "Student #" + studentId + "has been successfully updated.");
-            redirectAttributes.addFlashAttribute("messageType", "success");
-            return "redirect:/student/";
-        } else {
-            redirectAttributes.addAttribute("id", studentId);
-            redirectAttributes.addAttribute("student", student);
-            redirectAttributes.addFlashAttribute("message", "Error in updating a student #" + studentId + "!");
-            redirectAttributes.addFlashAttribute("messageType", "error");
-            return "redirect:/student/update/{id}";
-        }
+        studentService.updateStudent(student);
+        return new ResponseEntity<>(student, HttpStatus.OK);
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteStudent(@PathVariable("id") Long studentId, RedirectAttributes redirectAttributes) {
-        boolean deleteResult = studentService.deleteStudentById(studentId);
-
-        if (deleteResult) {
-            redirectAttributes.addFlashAttribute("message", "Student #" + studentId + "has been successfully deleted.");
-            redirectAttributes.addFlashAttribute("messageType", "success");
-        } else {
-            redirectAttributes.addFlashAttribute("message", "Error in deleting a student #" + studentId + "!");
-            redirectAttributes.addFlashAttribute("messageType", "error");
-        }
-
-        return "redirect:/student/";
+    public ResponseEntity<?> deleteStudent(@PathVariable("id") Long studentId) {
+        studentService.deleteStudentById(studentId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/restore/{id}")
-    public String restoreStudent(@PathVariable("id") Long studentId, RedirectAttributes redirectAttributes) {
-        boolean restoreResult = studentService.restoreStudentById(studentId);
-
-        if (restoreResult) {
-            redirectAttributes.addFlashAttribute("message", "Student #" + studentId + " has been successfully restored.");
-            redirectAttributes.addFlashAttribute("messageType", "success");
-        } else {
-            redirectAttributes.addFlashAttribute("message", "Error in restoring a student #" + studentId + "!");
-            redirectAttributes.addFlashAttribute("messageType", "error");
-        }
-
-        return "redirect:/student/";
+    public ResponseEntity<?> restoreStudent(@PathVariable("id") Long studentId) {
+        studentService.restoreStudentById(studentId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
 
