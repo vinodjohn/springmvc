@@ -68,7 +68,7 @@
                                 <th scope="row" th:text="${city.id}"></th>
                                 <td th:text="${city.name}"></td>
                                 <td th:text="${city.county.name}"></td>
-                                <td th:text="${city.country.name}"></td>
+                                <td th:text="${city.county.country.name}"></td>
                                 <td>
                                     <a th:if="${city.active} == true" th:href="@{/city/update/{id}(id=${city.id})}" class="btn btn-primary">Update</a>
                                     <a th:if="${city.active} == true" th:href="@{/city/delete/{id}(id=${city.id})}" class="btn btn-danger">Delete</a>

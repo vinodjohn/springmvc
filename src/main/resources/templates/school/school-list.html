@@ -66,7 +66,7 @@
                             <tr th:each="school : ${schools}">
                                 <th scope="row" th:text="${school.id}"></th>
                                 <td th:text="${school.name}"></td>
-                                <td th:text="${school.street + ', ' +  school.city.name + ', ' + school.county.name + ', ' + school.country.name + ' - ' + school.zipcode }"></td>
+                                <td th:text="${school.street + ', ' +  school.city.name + ', ' + school.city.county.name + ', ' + school.city.county.country.name + ' - ' + school.zipcode }"></td>
                                 <td>
                                     <a th:if="${school.active} == true" th:href="@{/school/update/{id}(id=${school.id})}" class="btn btn-primary">Update</a>
                                     <a th:if="${school.active} == true" th:href="@{/school/delete/{id}(id=${school.id})}" class="btn btn-danger">Delete</a>

@@ -79,8 +79,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public boolean restoreCityById(Long cityId) {
         City city = getById(cityId);
-        if (city == null || !countyService.getById(city.getCounty().getId()).isActive() ||
-                !countryService.getById(city.getCountry().getId()).isActive()) {
+        if (city == null || !countyService.getById(city.getCounty().getId()).isActive()) {
             return false;
         }
 

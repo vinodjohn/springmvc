@@ -19,10 +19,6 @@ public class School {
     private String street;
     @OneToOne
     private City city;
-    @OneToOne
-    private County county;
-    @OneToOne
-    private Country country;
     private String zipcode;
     private boolean isActive;
 }

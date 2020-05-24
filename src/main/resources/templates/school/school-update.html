@@ -50,18 +50,6 @@
                 </div>
                 <form action="#" th:action="@{/school/update/{id}(id=${school.id})}" th:object="${school}" method="post">
                     <div class="form-group">
-                        <label for="country">Select Country</label>
-                        <select th:field="*{country.id}" class="custom-select" id="country" required>
-                            <option th:each="country : ${countries}" th:value="${country.id}" th:text="${country.name}"></option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="county">Select County</label>
-                        <select th:field="*{county.id}" class="custom-select" id="county" required>
-                            <option th:each="county : ${counties}" th:value="${county.id}" th:text="${county.name}"></option>
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label for="city">Select City</label>
                         <select th:field="*{city.id}" class="custom-select" id="city" required>
                             <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>
